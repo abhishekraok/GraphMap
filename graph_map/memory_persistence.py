@@ -1,0 +1,41 @@
+import imagetree
+import imagetree_core.result_file
+import persistence_interface
+import result_file
+from graph_helpers import NodeLink
+
+
+class MemoryPersistence(persistence_interface.PersistenceInterface):
+    def __init__(self):
+        self.tree_dictionary = {}
+
+    def put_tree(self, input_tree):
+        """
+
+        :type input_tree: imagetree.ImageTree
+        :return:
+        """
+        self.tree_dictionary[input_tree.get_link()] = input_tree
+
+    def exists(self, node_link):
+        """
+        Checks if given node link is stored.
+
+        :type node_link: NodeLink
+        :return:
+        """
+        if isinstance(node_link, NodeLink):
+            key = node_link.get_old_node_link_string()
+        else:
+            key = node_link
+        return key in self.tree_dictionary
+
+    def get_tree(self, requested_node_link):
+        if isinstance(requested_node_link, NodeLink):
+            key = requested_node_link.get_old_node_link_string()
+        else:
+            key = requested_node_link
+        if key in self.tree_dictionary:
+            return result_file.good(self.tree_dictionary[key])
+        return result_file.fail(code=imagetree_core.result_file.NODE_LINK_NOT_FOUND_ERROR_CODE,
+                                message=requested_node_link.__str__() + ' not found in Memory Persistence')

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package imagetree_core;
+
+message Pixel {
+    int32 r = 1;
+    int32 g = 2;
+    int32 b = 3;
+    int32 a = 4;
+}
+
+message Children {
+    repeated string name = 1;
+}
+
+message ImageTree {
+    string name = 1;
+    Pixel pixel = 2;
+    Children children = 3;
+    string imgurl = 4;
+}
+
+message ImageForest {
+    repeated ImageTree forest = 1;
+}
