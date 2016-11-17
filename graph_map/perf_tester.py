@@ -71,12 +71,16 @@ def generate_multiple_random_tiles(count, max_lod):
 
 
 class PerfTester:
-    def __init__(self, endpoint=None, verbose=False):
+    def __init__(self, endpoint=None, verbose=False, node_link=None):
         self.end_point = endpoint or 'http://localhost:5555'
         self.verbose = verbose
+        self.node_link = node_link
 
     def tile_url(self, x, y, z):
-        return self.end_point + '/tile/{}/{}/{}'.format(z, x, y)
+        tile_url = self.end_point + '/tile/{}/{}/{}'.format(z, x, y)
+        if self.node_link:
+            tile_url += '&node_link=' + self.node_link
+        return tile_url
 
     def measure_xyz(self, x, y, z):
         url = self.tile_url(x, y, z)
@@ -112,9 +116,12 @@ class PerfTester:
         return all_stats
 
     def test_random_tiles(self, count, max_lod):
+        print('Testing random tiles for {} count, with end point {} and node link {}'
+              .format(count, self.end_point, self.node_link))
         tiles_to_hit = generate_multiple_random_tiles(count, max_lod)
         all_stats = self.test_multiple_tiles(tiles_to_hit)
         return AverageTimeStats(all_stats, self.end_point)
+
 
 def test_local(count=100):
     print('localhost')
@@ -123,12 +130,15 @@ def test_local(count=100):
     print(avg_local)
     avg_local.append_to_file()
 
+
 def test_kaii(count=100):
     print('kaiimap')
-    kaiimap_performance_tester = PerfTester(endpoint='http://kaiimap.org', verbose=True)
-    avg_kaii = kaiimap_performance_tester.test_random_tiles(count, 20)
+    kaiimap_performance_tester = PerfTester(endpoint='http://kaiimap.org', verbose=True,
+                                            node_link='start@https://artmapstore.blob.core.windows.net/firstnodes/user/abhishek/start.ver_10.tsv')
+    avg_kaii = kaiimap_performance_tester.test_random_tiles(count, max_lod=20)
     print (avg_kaii)
     avg_kaii.append_to_file()
 
+
 if __name__ == '__main__':
-    test_kaii(1000)
+    test_kaii(100)

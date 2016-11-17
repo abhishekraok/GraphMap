@@ -12,8 +12,10 @@ import serializer
 import utilities
 
 
-def show(tree, resolution):
-    plt.imshow(tree.get_np_array(resolution=resolution), interpolation='none')
+def show(tree, resolution, quad_key=None):
+    if quad_key is None:
+        quad_key = ''
+    plt.imshow(tree.get_pil_image_at_quadkey(resolution=resolution, quad_key=quad_key), interpolation='none')
     plt.draw()
     plt.pause(1)
 
@@ -28,7 +30,7 @@ def process_args(parser):
             exit()
         tree = serializer.load_link_new_serializer(arguments.nodelink)
         resolution = arguments.resolution if arguments.resolution is not None else 512
-        show(tree, resolution)
+        show(tree, resolution, arguments.quad_key)
         time.sleep(10)
         exit()
 

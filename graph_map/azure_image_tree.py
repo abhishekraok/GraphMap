@@ -1,8 +1,7 @@
 import os
-import custom_errors
 
+import custom_errors
 import utilities
-from azure.storage.blob import BlockBlobService
 
 first_container = 'firstnodes'
 first_storage_account = 'artmapstore'
@@ -33,6 +32,7 @@ def upload_to_url(file_to_store, url):
 
 
 def upload_to_blob_name(file_to_store, blob_name):
+    from azure.storage.blob import BlockBlobService
     global read_key
     if read_key is None:
         keys_filename = 'keys.txt'

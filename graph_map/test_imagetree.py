@@ -1,5 +1,6 @@
 import copy
 import os
+import time
 import unittest
 
 import alpha_conversion
@@ -10,6 +11,7 @@ import imagetree_core.utilities
 import imagevalue
 import numpy as np
 import serializer
+import standard_nodes
 import standard_pixel
 import tile_disk_cache
 import tileserver
@@ -20,7 +22,6 @@ import utilities
 from PIL import Image
 from pixel_approximator import PixelApproximator, PixelApproximationMethod
 from serialization import protbuf_serializer
-import standard_nodes
 
 
 class TestImageTree(unittest.TestCase):
@@ -619,6 +620,29 @@ class CreationTests(unittest.TestCase):
         self.assertEqual(loaded_tree, new_tree)
         os.remove(second_tree_filename)
         os.remove(first_tree_filename)
+
+
+class PerformanceTests(unittest.TestCase):
+    def test_performance_deep_quad_key_500ms(self):
+        quad_key = '001023020031110131'
+        node_link = 'start@https://artmapstore.blob.core.windows.net/firstnodes/user/abhishek/start.ver_10.tsv'
+        root_tree = serializer.load_link_new_serializer(node_link)
+        pil_image0 = root_tree.get_pil_image_at_quadkey(resolution=256, quad_key=quad_key)  # warm it up
+        start_time = time.time()
+        pil_image1 = root_tree.get_pil_image_at_quadkey(resolution=256, quad_key=quad_key)
+        end_time = time.time()
+        duration_ms = 1000 * (end_time - start_time)
+        time_limit_ms = 50
+        self.assertLess(duration_ms, time_limit_ms, 'Time taken to create image ' + str(duration_ms) +
+                        ' is not less than ' + str(time_limit_ms))
+
+    def test_lowest_set_node(self):
+        node_link = 'start@https://artmapstore.blob.core.windows.net/firstnodes/user/abhishek/start.ver_10.tsv'
+        root_tree = serializer.load_link_new_serializer(node_link)
+        quad_key = '001023020031111023210'
+        lowest_set_node, relative_quad_key = root_tree.lowest_set_node(quad_key)
+        self.assertEqual(relative_quad_key, '0')
+        self.assertTrue(lowest_set_node.is_set())
 
     def test_pil_image_at_quad_key(self):
         seattle_skyline_pil_image = utilities.reshape_proper_pil_image(

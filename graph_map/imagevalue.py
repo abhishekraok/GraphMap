@@ -12,9 +12,11 @@ def fetch_image_from_url(url):
     Returns a pil image from given url
     :rtype Image.Image:
     """
-    img_stream = cStringIO.StringIO(urllib.urlopen(url).read())
-    pil_image = Image.open(img_stream)
-    return pil_image
+    if utilities.url_exists(url):
+        img_stream = cStringIO.StringIO(urllib.urlopen(url).read())
+        pil_image = Image.open(img_stream)
+        return pil_image
+    return Image.new("RGB", size=(256, 266), color='black')
 
 
 class ImageValue:
@@ -43,6 +45,11 @@ class ImageValue:
         pass
 
 
+image_cache_size = 1000
+pil_image_cache = pylru.lrucache(image_cache_size)
+proper_shape_image_cache = pylru.lrucache(image_cache_size)
+
+
 class JpgWebImage(ImageValue):
     """
     A lazily fetched web image.
@@ -55,14 +62,21 @@ class JpgWebImage(ImageValue):
         :type _pil_image: Image.Image
         """
         self.url = url
-        self._pil_image = None
-        self._proper_shape_image = None
+        if url in pil_image_cache:
+            self._pil_image = pil_image_cache[url]
+        else:
+            self._pil_image = None
+        if url in proper_shape_image_cache:
+            self._proper_shape_image = proper_shape_image_cache[url]
+        else:
+            self._proper_shape_image = None
         self.cache = pylru.lrucache(10)
 
     @property
     def pil_image(self):
         if self._pil_image is None:
             self._pil_image = fetch_image_from_url(self.url)
+            pil_image_cache[self.url] = self._pil_image
         return self._pil_image
 
     def get_pil_image_at_full_resolution(self):
@@ -71,6 +85,7 @@ class JpgWebImage(ImageValue):
     def get_pil_image_at_full_resolution_proper_shape(self):
         if self._proper_shape_image is None:
             self._proper_shape_image = utilities.reshape_proper_pil_image(self.get_pil_image_at_full_resolution())
+            proper_shape_image_cache[self.url] = self._proper_shape_image
         return self._proper_shape_image
 
     def get_pil_image(self, resolution):
@@ -91,7 +106,7 @@ class JpgWebImage(ImageValue):
         pil_image = self.get_pil_image_at_full_resolution()
         im_array = np.array(pil_image, dtype=np.uint8)
         square_image = utilities.reshape_proper(im_array)
-        return_value =  np.array(Image.fromarray(square_image).resize((resolution, resolution)), dtype=np.uint8)
+        return_value = np.array(Image.fromarray(square_image).resize((resolution, resolution)), dtype=np.uint8)
         self.cache[cache_key] = return_value
         return return_value
 

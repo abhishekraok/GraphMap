@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import constants
 import imagevalue
 import numpy as np
 import pixel_approximator
@@ -465,12 +466,14 @@ class ImageTree:
         Gets the tile image at x, y, z. If tile is not found raises NodeNotFoundException
         :rtype: Image.Image
         """
-        print('Getting pil image for node', self.name, ' xyz=', x, y, z, ' at resolution of ', resolution)
         quad_key = utilities.xyz_to_quadkey(x, y, z)
         return self.get_pil_image_at_quadkey(resolution=resolution, quad_key=quad_key)
 
     def get_pil_image_at_quadkey(self, resolution, quad_key):
-        return Image.fromarray(self.get_np_array_at_quad_key(resolution=resolution, quad_key=quad_key))
+        lowest_node, relative_quad_key = self.lowest_set_node(quad_key)
+        if lowest_node is None:
+            lowest_node, relative_quad_key = self, quad_key
+        return Image.fromarray(lowest_node.get_np_array_at_quad_key(resolution=resolution, quad_key=relative_quad_key))
 
     def get_np_array_at_quad_key(self, resolution, quad_key, input_im_array=None):
         if len(quad_key) <= 0:
@@ -502,3 +505,20 @@ class ImageTree:
 
     def get_pil_image_at_full_resolution(self):
         return self.get_pil_image(resolution=256)
+
+    def lowest_set_node(self, input_quad_key, result_node=None, relative_quad_key=None):
+        """
+        Find the last node that has image set.
+
+        :type input_quad_key:str
+        :return: tuple of node and the relative quad key of the given quad key wrt to the returned node
+        :rtype: tuple of ImageTree and str
+        """
+        if input_quad_key == '' or self.is_leaf():
+            return result_node, relative_quad_key
+        if self.is_set():
+            result_node = self
+            relative_quad_key = input_quad_key
+        child_index = int(input_quad_key[0])
+        return self.get_children()[child_index] \
+            .lowest_set_node(input_quad_key[1:], result_node=result_node, relative_quad_key=relative_quad_key)
