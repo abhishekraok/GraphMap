@@ -87,3 +87,38 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# images and serialized files
+*.jpg
+*.json
+*.gz
+*.gzip
+*.tsv
+*.itpb
+
+.idea
+data/
+
+# Created by https://www.gitignore.io/api/django
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+media
+
+# VS
+.vs
+bin/
+obj/
+
+# Private keys
+keys.txt
+*.db
+
+# cache
+cache/
+
