@@ -1,5 +1,5 @@
 import imagetree
-import imagetree_core.result_file
+import result_file
 import persistence_interface
 import result_file
 from graph_helpers import NodeLink
@@ -37,5 +37,5 @@ class MemoryPersistence(persistence_interface.PersistenceInterface):
             key = requested_node_link
         if key in self.tree_dictionary:
             return result_file.good(self.tree_dictionary[key])
-        return result_file.fail(code=imagetree_core.result_file.NODE_LINK_NOT_FOUND_ERROR_CODE,
-                                message=requested_node_link.__str__() + ' not found in Memory Persistence')
+        return result_file.fail(code=result_file.NODE_LINK_NOT_FOUND_ERROR_CODE,
+                                message=str(requested_node_link) + ' not found in Memory Persistence')

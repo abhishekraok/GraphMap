@@ -83,17 +83,17 @@ class GraphMap:
         except custom_errors.NodeNotFoundException as e:
             return result_file.fail(message=e.message, code=result_file.NODE_LINK_NOT_FOUND_ERROR_CODE)
 
-    def get_image_at_quad_key(self, root, resolution, quad_key):
+    def get_image_at_quad_key(self, root_node_link, resolution, quad_key):
         """
         Gets the pil image at quad key.
 
-        :type root: graph_helpers.NodeLink
+        :type root_node_link: graph_helpers.NodeLink
         :type resolution: int
         :type quad_key: str
         :return: Result whose value is a PIL Image.
         :rtype: result_file.Result
         """
         return result_file.combine((
-            lambda prev_value: self.persistence.get_tree(root),
+            lambda prev_value: self.persistence.get_tree(root_node_link),
             lambda prev_value: result_file.good(prev_value
                                                 .get_pil_image_at_quadkey(resolution=resolution, quad_key=quad_key))))
