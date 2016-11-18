@@ -1,16 +1,16 @@
 import unittest
-import graph_map
-import memory_persistence
-import utilities
-import result_file
-import imagevalue
-from graph_helpers import NodeLink, QuadKey
-from PIL import Image
-import constants
-import imagetree
-import numpy as np
-from constants import seattle_skyline_url
-import serializer
+from .context import graphmap
+
+from graphmap import constants
+from graphmap import graph_map
+from graphmap import imagetree
+from graphmap import imagevalue
+from graphmap import memory_persistence
+from graphmap import result_file
+from graphmap import serializer
+from graphmap import utilities
+from graphmap.constants import seattle_skyline_url
+from graphmap.graph_helpers import NodeLink
 
 wiki_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Wikimedia_Foundation_RGB_logo_with_text.svg/240px-Wikimedia_Foundation_RGB_logo_with_text.svg.png'
 wiki_pil_image = utilities.reshape_proper_pil_image(imagevalue.fetch_image_from_url(wiki_image_url))
@@ -242,7 +242,7 @@ class GetImageAtQuadKey(unittest.TestCase):
             for i in range(len(lowest_quad_key) + 1):
                 node_quad_key = lowest_quad_key[:i]
                 resolution = 2 ** (len(lowest_quad_key) - i) * 32
-                node_pil_image_result = gm.get_image_at_quad_key(root=fruits_node_link, resolution=resolution,
+                node_pil_image_result = gm.get_image_at_quad_key(root_node_link=fruits_node_link, resolution=resolution,
                                                                  quad_key=node_quad_key)
                 self.assertTrue(node_pil_image_result.is_success())
                 node_pil_image = node_pil_image_result.value
