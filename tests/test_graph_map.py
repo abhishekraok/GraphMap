@@ -252,9 +252,21 @@ class GetImageAtQuadKey(unittest.TestCase):
             for expected_same_image in expected_same_images[1:]:
                 self.assertTrue(utilities.pil_images_equal(expected_same_image, expected_same_images[0]))
 
-# class IntegrationTests(unittest.TestCase):
-#     def test_build_sample_and_compare(self):
-#         raise NotImplementedError
-#
-#     def test_build_another_sample_and_compare(self):
-#         raise NotImplementedError
+
+class IntegrationTests(unittest.TestCase):
+    def test_getting_started_sample(self):
+        G = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        seattle_skyline_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Space_Needle002.jpg/640px-Space_Needle002.jpg'
+        mt_tacoma_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Mount_Rainier_from_the_Silver_Queen_Peak.jpg/1024px-Mount_Rainier_from_the_Silver_Queen_Peak.jpg'
+        seattle_node_link = NodeLink('seattle')
+        mt_tacoma_node_link = NodeLink('tacoma')
+        G.create_node(root_node_link=seattle_node_link, image_value_link=seattle_skyline_image_url)
+        G.create_node(root_node_link=mt_tacoma_node_link, image_value_link=mt_tacoma_image_url)
+        insert_quad_key = '13'
+        created_node_link_result = G.connect_child(root_node_link=seattle_node_link,
+                                            quad_key=insert_quad_key,
+                                            child_node_link=mt_tacoma_node_link)
+        self.assertTrue(created_node_link_result.is_success())
+        created_node_link = created_node_link_result.value
+        new_seattle_image_result = G.get_image_at_quad_key(created_node_link, resolution=256, quad_key='')
+        self.assertTrue(new_seattle_image_result.is_success())

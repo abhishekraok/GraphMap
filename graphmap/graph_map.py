@@ -95,5 +95,5 @@ class GraphMap:
         """
         return result_file.combine((
             lambda prev_value: self.persistence.get_tree(root_node_link),
-            lambda prev_value: result_file.good(prev_value
-                                                .get_pil_image_at_quadkey(resolution=resolution, quad_key=quad_key))))
+            lambda prev_value: result_file.good(prev_value.get_pil_image_at_quadkey(
+                resolution=resolution, quad_key=quad_key))))
