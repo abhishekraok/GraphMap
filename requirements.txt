@@ -1,0 +1,7 @@
+nose
+sphinx
+pylru
+enum
+numpy
+pillow
+protobuf
