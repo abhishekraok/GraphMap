@@ -2,7 +2,7 @@ import unittest
 from .context import graphmap
 
 from graphmap import constants
-from graphmap import graph_map
+from graphmap import graphmap_main
 from graphmap import imagetree
 from graphmap import imagevalue
 from graphmap import memory_persistence
@@ -19,7 +19,7 @@ seattle_skyline_pil_image = utilities.reshape_proper_pil_image(imagevalue.fetch_
 
 class CreateNodeTests(unittest.TestCase):
     def test_valid_jpg_link(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         node_name = NodeLink('tvjl', None)
         self.assertFalse(gm.node_exists(node_name))
         create_result = gm.create_node(root_node_link=node_name, image_value_link=wiki_image_url)
@@ -28,7 +28,7 @@ class CreateNodeTests(unittest.TestCase):
         self.assertEqual(create_result.value, node_name)
 
     def test_valid_node_link_same_image(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('tvnl_first')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('tvnl_second')
@@ -40,7 +40,7 @@ class CreateNodeTests(unittest.TestCase):
         self.assertTrue(utilities.pil_images_equal(first_image_result.value, second_image_result.value))
 
     def test_invalid_already_exists(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('tiae')
         create_result = gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         self.assertEqual(create_result.code, result_file.SUCCESS_CODE)
@@ -49,7 +49,7 @@ class CreateNodeTests(unittest.TestCase):
         self.assertEqual(repeat_create_result.code, result_file.NAME_ALREADY_EXISTS)
 
     def test_invalid_wrong_children_count(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         children_names = ('a', 'b', 'c', 'd')
         good_result = gm.create_node(root_node_link=NodeLink('tiwccg'), children_links=children_names)
         self.assertEqual(good_result.code, result_file.SUCCESS_CODE)
@@ -61,7 +61,7 @@ class CreateNodeTests(unittest.TestCase):
 
 class ConnectChildTests(unittest.TestCase):
     def test_valid_simple(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('anttvs')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('tvnl_second')
@@ -75,7 +75,7 @@ class ConnectChildTests(unittest.TestCase):
 
     @unittest.skip("Currently blank quad key is not supported")
     def test_valid_quad_key_blank(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('anttvb_first')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('anttvb_second')
@@ -95,7 +95,7 @@ class ConnectChildTests(unittest.TestCase):
 
     @unittest.skip("will make quad key a class and check there")
     def test_invalid_quad_key(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('ant_iqk_first')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('ant_iqk_second')
@@ -106,7 +106,7 @@ class ConnectChildTests(unittest.TestCase):
         self.assertFalse(new_root_result.is_success())
 
     def test_valid_new_root_name(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('ant_vnr_first')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('ant_vnr_second')
@@ -120,7 +120,7 @@ class ConnectChildTests(unittest.TestCase):
         self.assertEqual(new_root_result.value, input_new_root)
 
     def test_invalid_add_non_existent_insert_node_name(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('ant_nen_first')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('ant_nen_second')
@@ -132,7 +132,7 @@ class ConnectChildTests(unittest.TestCase):
         self.assertEqual(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, new_root_result.code)
 
     def test_invalid_add_non_existent_root_name(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('ant_ner_first')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('ant_ner_second')
@@ -146,20 +146,20 @@ class ConnectChildTests(unittest.TestCase):
 
 class NodeExistsTest(unittest.TestCase):
     def test_exists_true(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('ne0')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         self.assertTrue(gm.node_exists(first_node_name))
 
     def test_exists_false(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         gm.create_node(root_node_link=NodeLink('lajaflaga'), image_value_link=wiki_image_url)
         self.assertFalse(gm.node_exists('agaljvalbla'))
 
 
 class GetChildName(unittest.TestCase):
     def test_valid_quad_key(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_link = NodeLink('gcn_vq')
         gm.create_node(root_node_link=first_node_link, image_value_link=wiki_image_url)
         second_node_link = NodeLink('gcn_vq2')
@@ -173,7 +173,7 @@ class GetChildName(unittest.TestCase):
         self.assertEqual(second_node_link, child_name_result.value)
 
     def test_invalid_child_not_exists(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('gcn_cne')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('gcn_cne')
@@ -186,7 +186,7 @@ class GetChildName(unittest.TestCase):
         self.assertEqual(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, child_name_result.code)
 
     def test_invalid_root_does_not_exists(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('gcn_ner')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('gcn_ner2')
@@ -202,7 +202,7 @@ class GetChildName(unittest.TestCase):
 
 class GetImageAtQuadKey(unittest.TestCase):
     def test_valid_image_match_resolution(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('tvimr')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         test_resolution = 256
@@ -218,7 +218,7 @@ class GetImageAtQuadKey(unittest.TestCase):
     #     raise NotImplementedError
 
     def test_no_change_after_adding_node(self):
-        gm = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('nocan0')
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         test_resolution = 256
@@ -234,7 +234,7 @@ class GetImageAtQuadKey(unittest.TestCase):
                                                    first_image_after_add_result.value))
 
     def test_consistent_image_as_you_zoom(self):
-        gm = graph_map.GraphMap(serializer.Serializer())
+        gm = graphmap_main.GraphMap(serializer.Serializer())
         fruits_node_link = NodeLink(constants.FRUITS_LINK)
         lowest_quad_keys = ['333133', '312312', '131231']
         for lowest_quad_key in lowest_quad_keys:
@@ -255,7 +255,7 @@ class GetImageAtQuadKey(unittest.TestCase):
 
 class IntegrationTests(unittest.TestCase):
     def test_getting_started_sample(self):
-        G = graph_map.GraphMap(memory_persistence.MemoryPersistence())
+        G = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         seattle_skyline_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Space_Needle002.jpg/640px-Space_Needle002.jpg'
         mt_tacoma_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Mount_Rainier_from_the_Silver_Queen_Peak.jpg/1024px-Mount_Rainier_from_the_Silver_Queen_Peak.jpg'
         seattle_node_link = NodeLink('seattle')
