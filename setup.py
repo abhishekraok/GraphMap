@@ -8,7 +8,7 @@ with open('LICENSE') as f:
 
 setup(
     name='graphmap',
-    version='0.0.1',
+    version='0.0.2',
     description='Images on a quad graph',
     author='Abhishek Rao',
     author_email='abhishek.rao.comm@gmail.com',
