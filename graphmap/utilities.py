@@ -141,7 +141,6 @@ def stretch_keep_aspect(pil_image, max_resolution):
     else:
         new_width = int(float(width * max_resolution) / height)
         new_height = max_resolution
-    print('Reshaping  from ', height, width, ' to ', new_height, new_width, ' pixel image')
     pil_image = pil_image.resize(size=(new_width, new_height))
     blank_array = np.zeros((max_resolution, max_resolution, 3), dtype=np.uint8)
     blank_array[:new_height, :new_width, :3] = np.array(pil_image, dtype=np.uint8)[:, :, :3]
