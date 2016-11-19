@@ -76,7 +76,10 @@ def create_new_from_old_insert_node_link(old_tree, link_to_insert, quad_key, fil
         if another_tree_result.is_fail():
             return another_tree_result
         another_tree = another_tree_result.value
-        new_tree.insert(another_tree=another_tree, quad_key=quad_key)
+        try:
+            new_tree.insert(another_tree=another_tree, quad_key=quad_key)
+        except custom_errors.CreationFailedError as e:
+            return result_file.fail(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, e.message)
         return result_file.good(new_tree)
 
     children = old_tree.get_children()[:]  # deep copy

@@ -5,6 +5,7 @@ import result_file
 from graph_helpers import NodeLink
 import serializer
 import custom_errors
+import standard_nodes
 
 
 class MemoryPersistence(persistence_interface.PersistenceInterface):
@@ -42,8 +43,10 @@ class MemoryPersistence(persistence_interface.PersistenceInterface):
         # If not found in memory try disk
         try:
             image_tree = serializer.load_link_new_serializer(str(requested_node_link))
-            self.put_tree(image_tree)
-            return result_file.good(image_tree)
+            if image_tree.name != standard_nodes.node_not_found_name:
+                # Todo need a better way, should not rely on name
+                self.put_tree(image_tree)
+                return result_file.good(image_tree)
         except custom_errors.NodeNotFoundException as e:
             pass
         return result_file.fail(code=result_file.NODE_LINK_NOT_FOUND_ERROR_CODE,

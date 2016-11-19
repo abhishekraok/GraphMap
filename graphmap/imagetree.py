@@ -366,9 +366,9 @@ class ImageTree:
         :rtype: None
         """
         if len(quad_key) <= 0:
-            raise Exception('Quadkey cannot be blank. Cannot replace self with another tree.')
+            raise custom_errors.CreationFailedError('Quadkey cannot be blank. Cannot replace self with another tree.')
         if not utilities.is_valid_quadkey(quad_key):
-            raise Exception('Given quadkey is not valid ' + quad_key)
+            raise custom_errors.CreationFailedError('Given quadkey is not valid ' + quad_key)
         replace_index = int(quad_key[0])
         if self.is_leaf():
             self.grow_empty()

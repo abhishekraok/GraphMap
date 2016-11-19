@@ -125,7 +125,7 @@ class ConnectChildTests(unittest.TestCase):
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('ant_nen_second')
         gm.create_node(root_node_link=second_node_name, image_value_link=seattle_skyline_url)
-        quad_key = '512'
+        quad_key = '123'
         new_root_result = gm.connect_child(root_node_link=first_node_name, quad_key=quad_key,
                                            child_node_link=NodeLink('dalja'))
         self.assertFalse(new_root_result.is_success())
@@ -137,7 +137,7 @@ class ConnectChildTests(unittest.TestCase):
         gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
         second_node_name = NodeLink('ant_ner_second')
         gm.create_node(root_node_link=second_node_name, image_value_link=seattle_skyline_url)
-        quad_key = '512'
+        quad_key = '013'
         new_root_result = gm.connect_child(root_node_link=NodeLink('galall'), quad_key=quad_key,
                                            child_node_link=second_node_name)
         self.assertFalse(new_root_result.is_success())
