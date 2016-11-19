@@ -3,12 +3,9 @@
 from setuptools import setup, find_packages
 
 
-with open('LICENSE') as f:
-    license = f.read()
-
 setup(
     name='graphmap',
-    version='0.0.2',
+    version='0.0.3',
     description='Images on a quad graph',
     author='Abhishek Rao',
     author_email='abhishek.rao.comm@gmail.com',
