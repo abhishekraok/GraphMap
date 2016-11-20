@@ -18,13 +18,6 @@ If a node doesn't have an image it is invisible.
 [KaiiMap Gallery](http://kaiimap.org/gallery) is a website created that uses GraphMap and OpenSeadragon. 
 
 
-### Inspiration
-- [Deep Zoom Images](https://msdn.microsoft.com/en-us/library/cc645077%28v=vs.95%29.aspx?f=255&MSPPError=-2147217396) for viewing the images
-- Inspired by my [blog article](http://blog.abhishekrao.org/2013/11/multi-level-attack.html)
-- XKCD comic on deep zoom [xkdcd1110](http://dump.ventero.de/xkcd1110/open.html) 
-- The graph created by the API is [Persistent Immutable DataStructure](https://en.wikipedia.org/wiki/Persistent_data_structure). The ideas used are similar to the ones explaine in this video [Immutable JS](http://facebook.github.io/immutable-js/)
-
-
 ### Installation
 You can use pip to install the stable version
 
@@ -41,5 +34,11 @@ Start with ipython notebook [Getting Started Notebook]
 
 Follow up with other notebooks in the [notebook section](./notebook/)
 
-#### Related
+### Inspiration
+- [Deep Zoom Images](https://msdn.microsoft.com/en-us/library/cc645077%28v=vs.95%29.aspx?f=255&MSPPError=-2147217396) for viewing the images
+- Inspired by my [blog article](http://blog.abhishekrao.org/2013/11/multi-level-attack.html)
+- XKCD comic on deep zoom [xkdcd1110](http://dump.ventero.de/xkcd1110/open.html) 
+- The graph created by the API is [Persistent Immutable DataStructure](https://en.wikipedia.org/wiki/Persistent_data_structure). The ideas used are similar to the ones explaine in this video [Immutable JS](http://facebook.github.io/immutable-js/)
+
+#### Links
 - [Deep zoom links (Quora)](https://www.quora.com/What-is-Seadragon-used-for-and-how-does-it-work-in-really-simple-laymen-terms) What is OpenSeadragon
