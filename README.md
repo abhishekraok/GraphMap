@@ -8,6 +8,7 @@ One can imagine this as a quad tree, and you are looking from the top.
 Except that any image from the child takes higher priority than parent.
 If a node doesn't have an image it is invisible. 
 
+![Graph Map structure](https://artmapstore.blob.core.windows.net/firstnodes/photos/node_image.png)
 
 ### Features
 - The created graph is immutable. New nodes can be added but old ones cannot be modified.
