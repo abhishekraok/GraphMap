@@ -26,3 +26,10 @@ class PersistenceInterface:
         :rtype: Result
         """
         raise NotImplementedError('This is an interface, subclass this')
+
+    def get_all_node_links(self):
+        """
+        Gets the names of all the nodes.
+        """
+        raise NotImplementedError('This is an interface, subclass this')
+

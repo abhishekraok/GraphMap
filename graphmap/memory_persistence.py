@@ -1,11 +1,10 @@
+import custom_errors
 import imagetree
-import result_file
 import persistence_interface
 import result_file
-from graph_helpers import NodeLink
 import serializer
-import custom_errors
 import standard_nodes
+from graph_helpers import NodeLink
 
 
 class MemoryPersistence(persistence_interface.PersistenceInterface):
@@ -51,3 +50,6 @@ class MemoryPersistence(persistence_interface.PersistenceInterface):
             pass
         return result_file.fail(code=result_file.NODE_LINK_NOT_FOUND_ERROR_CODE,
                                 message=str(requested_node_link) + ' not found in Memory Persistence')
+
+    def get_all_node_links(self):
+        return self.tree_dictionary.keys()

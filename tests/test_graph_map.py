@@ -255,6 +255,13 @@ class GetImageAtQuadKey(unittest.TestCase):
 
 class IntegrationTests(unittest.TestCase):
     def test_getting_started_sample(self):
+        G, created_node_link_result = self.create_sample()
+        self.assertTrue(created_node_link_result.is_success())
+        created_node_link = created_node_link_result.value
+        new_seattle_image_result = G.get_image_at_quad_key(created_node_link, resolution=256, quad_key='')
+        self.assertTrue(new_seattle_image_result.is_success())
+
+    def create_sample(self):
         G = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         seattle_skyline_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Space_Needle002.jpg/640px-Space_Needle002.jpg'
         mt_tacoma_image_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Mount_Rainier_from_the_Silver_Queen_Peak.jpg/1024px-Mount_Rainier_from_the_Silver_Queen_Peak.jpg'
@@ -264,9 +271,12 @@ class IntegrationTests(unittest.TestCase):
         G.create_node(root_node_link=mt_tacoma_node_link, image_value_link=mt_tacoma_image_url)
         insert_quad_key = '13'
         created_node_link_result = G.connect_child(root_node_link=seattle_node_link,
-                                            quad_key=insert_quad_key,
-                                            child_node_link=mt_tacoma_node_link)
-        self.assertTrue(created_node_link_result.is_success())
-        created_node_link = created_node_link_result.value
-        new_seattle_image_result = G.get_image_at_quad_key(created_node_link, resolution=256, quad_key='')
-        self.assertTrue(new_seattle_image_result.is_success())
+                                                   quad_key=insert_quad_key,
+                                                   child_node_link=mt_tacoma_node_link)
+        return G, created_node_link_result
+
+    def test_list_all_nodes(self):
+        G, root_node_link_result = self.create_sample()
+        node_name_list = G.get_all_node_links()
+        for node_name in ['seattle', 'tacoma', str(root_node_link_result.value)]:
+            self.assertIn(node_name, node_name_list)

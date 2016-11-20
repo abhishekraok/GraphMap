@@ -1,8 +1,11 @@
 from urllib2 import HTTPError
 
+from enum import Enum
+
 import custom_errors
 import imagetree
 import imagevalue
+import result_file
 import serialization.protbuf_serializer
 import serialization.tsv_serializer
 import standard_nodes
@@ -10,10 +13,8 @@ import tile_disk_cache
 import tree_operator
 import treemap
 import utilities
-from enum import Enum
-from persistence_interface import PersistenceInterface
 from graph_helpers import NodeLink
-import result_file
+from persistence_interface import PersistenceInterface
 
 
 class FileType(Enum):
@@ -182,6 +183,9 @@ class Serializer(PersistenceInterface):
             return result_file.good(self.load_node(node_link.get_old_node_link_string()))
         except custom_errors.NodeNotFoundException as e:
             return result_file.fail(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, e.message)
+
+    def get_all_node_links(self):
+        return (node_name for filename in self.filename_treemap_map for node_name in filename)
 
 
 def create_tree_from_jpg_url(url, name, serializer, filename='create_tree_from_jpg_url'):
