@@ -19,7 +19,7 @@ If a node doesn't have an image it is invisible.
 [KaiiMap Gallery](http://kaiimap.org/gallery) is a website created that uses GraphMap and OpenSeadragon. 
 
 
-### Installation
+## Installation
 You can use pip to install the stable version
 
 `pip install graphmap`
@@ -30,11 +30,10 @@ If you want to install the latest directly from github you can use
 
 [![Build Status](https://travis-ci.org/abhishekraok/GraphMap.svg?branch=master)](https://travis-ci.org/abhishekraok/GraphMap)
 
-### Getting Started Notebook
-Start with ipython notebook [Getting Started Notebook]
-(./notebook/Example_Getting_Started.ipynb)
-
-Follow up with other notebooks in the [notebook section](./notebook/)
+## Getting Started
+- Start with ipython notebook [Getting Started Notebook](./notebook/Example_Getting_Started.ipynb)
+- Follow up with other notebooks in the [notebook section](./notebook/)
+- Check the unit tests [Tests](./tests/)
 
 ### Inspiration
 - [Deep Zoom Images](https://msdn.microsoft.com/en-us/library/cc645077%28v=vs.95%29.aspx?f=255&MSPPError=-2147217396) for viewing the images
