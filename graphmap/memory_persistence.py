@@ -1,7 +1,7 @@
 import custom_errors
 import imagetree
 import persistence_interface
-import result_file
+import result
 import serializer
 import standard_nodes
 from graph_helpers import NodeLink
@@ -38,18 +38,18 @@ class MemoryPersistence(persistence_interface.PersistenceInterface):
         else:
             key = requested_node_link
         if key in self.tree_dictionary:
-            return result_file.good(self.tree_dictionary[key])
+            return result.good(self.tree_dictionary[key])
         # If not found in memory try disk
         try:
             image_tree = serializer.load_link_new_serializer(str(requested_node_link))
             if image_tree.name != standard_nodes.node_not_found_name:
                 # Todo need a better way, should not rely on name
                 self.put_tree(image_tree)
-                return result_file.good(image_tree)
+                return result.good(image_tree)
         except custom_errors.NodeNotFoundException as e:
             pass
-        return result_file.fail(code=result_file.NODE_LINK_NOT_FOUND_ERROR_CODE,
-                                message=str(requested_node_link) + ' not found in Memory Persistence')
+        return result.fail(code=result.NODE_LINK_NOT_FOUND_ERROR_CODE,
+                           message=str(requested_node_link) + ' not found in Memory Persistence')
 
     def get_all_node_links(self):
         return self.tree_dictionary.keys()

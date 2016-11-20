@@ -5,7 +5,7 @@ import serializer
 import utilities
 import imagevalue
 from graph_helpers import NodeLink
-import result_file
+import result
 
 
 def create_new_from_old_and_save(old_root_link, quad_key, image_link, name, filename):
@@ -63,7 +63,7 @@ def create_new_from_old_insert_node_link(old_tree, link_to_insert, quad_key, fil
     :type filename: str
     :type new_tree_name: str
     :return: imagetree.ImageTree
-    :rtype: result_file.Result
+    :rtype: result.Result
     """
     if len(quad_key) == 0:
         raise Exception('Quadkey for insert node link should have > 1 length')
@@ -79,8 +79,8 @@ def create_new_from_old_insert_node_link(old_tree, link_to_insert, quad_key, fil
         try:
             new_tree.insert(another_tree=another_tree, quad_key=quad_key)
         except custom_errors.CreationFailedError as e:
-            return result_file.fail(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, e.message)
-        return result_file.good(new_tree)
+            return result.fail(result.NODE_LINK_NOT_FOUND_ERROR_CODE, e.message)
+        return result.good(new_tree)
 
     children = old_tree.get_children()[:]  # deep copy
     children_links = old_tree.children_links[:]
@@ -92,7 +92,7 @@ def create_new_from_old_insert_node_link(old_tree, link_to_insert, quad_key, fil
         new_tree = imagetree.ImageTree(name=new_tree_name, filename=filename, children_links=children_links,
                                        input_image=old_tree.get_image_value(), children=children,
                                        serializer=old_tree.serializer)
-        return result_file.good(new_tree)
+        return result.good(new_tree)
 
     new_child_result = create_new_from_old_insert_node_link(old_tree=old_tree.get_children()[child_index],
                                                             link_to_insert=link_to_insert,
@@ -107,7 +107,7 @@ def create_new_from_old_insert_node_link(old_tree, link_to_insert, quad_key, fil
     new_tree = imagetree.ImageTree(name=new_tree_name, filename=filename, children_links=children_links,
                                    input_image=old_tree.get_image_value(), children=children,
                                    serializer=old_tree.serializer)
-    return result_file.good(new_tree)
+    return result.good(new_tree)
 
 
 def create_new_from_old_insert_jpg(old_tree, link_to_insert, quad_key, filename, new_tree_name):
@@ -121,19 +121,19 @@ def create_new_from_old_insert_jpg(old_tree, link_to_insert, quad_key, filename,
     :type filename: str
     :type new_tree_name: str
     :returns: Result wrapping imagetree.ImageTre
-    :rtype : result_file.Result
+    :rtype : result.Result
     """
     if quad_key == '':
         new_tree = serializer.create_tree_from_jpg_url(url=link_to_insert, serializer=old_tree.serializer,
                                                        name=new_tree_name,
                                                        filename=filename)
-        return result_file.good(new_tree)
+        return result.good(new_tree)
     if old_tree.is_leaf():
         new_tree = imagetree.ImageTree(name=new_tree_name, filename=filename, children_links=[],
                                        input_image=old_tree.get_image_value(),
                                        children=[], serializer=old_tree.serializer)
         new_tree.insert_jpg_at_quadkey(jpg_link=link_to_insert, quad_key=quad_key)
-        return result_file.good(new_tree)
+        return result.good(new_tree)
     children = old_tree.get_children()[:]  # deep copy
     children_links = old_tree.children_links[:]
     child_index = int(quad_key[0])
@@ -146,7 +146,7 @@ def create_new_from_old_insert_jpg(old_tree, link_to_insert, quad_key, filename,
     new_tree = imagetree.ImageTree(name=new_tree_name, filename=filename, children_links=children_links,
                                    input_image=old_tree.get_image_value(), children=children,
                                    serializer=old_tree.serializer)
-    return result_file.good(new_tree)
+    return result.good(new_tree)
 
 
 def get_next_version_name(current_version_filename):

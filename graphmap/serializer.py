@@ -5,7 +5,7 @@ from enum import Enum
 import custom_errors
 import imagetree
 import imagevalue
-import result_file
+import result
 import serialization.protbuf_serializer
 import serialization.tsv_serializer
 import standard_nodes
@@ -177,12 +177,12 @@ class Serializer(PersistenceInterface):
         Gets tree for the given node_link
         :type node_link: NodeLink
         :returns: Result wrapping imagetree.ImageTree
-        :rtype: result_file.Result
+        :rtype: result.Result
         """
         try:
-            return result_file.good(self.load_node(node_link.get_old_node_link_string()))
+            return result.good(self.load_node(node_link.get_old_node_link_string()))
         except custom_errors.NodeNotFoundException as e:
-            return result_file.fail(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, e.message)
+            return result.fail(result.NODE_LINK_NOT_FOUND_ERROR_CODE, e.message)
 
     def get_all_node_links(self):
         return (node_name for filename in self.filename_treemap_map for node_name in filename)
