@@ -27,6 +27,7 @@ If you want to install the latest directly from github you can use
 
 `pip install git+https://github.com/abhishekraok/GraphMap`
 
+[![Build Status](https://travis-ci.org/abhishekraok/GraphMap.svg?branch=master)](https://travis-ci.org/abhishekraok/GraphMap)
 
 ### Getting Started Notebook
 Start with ipython notebook [Getting Started Notebook]
