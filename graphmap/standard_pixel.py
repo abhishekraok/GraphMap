@@ -101,5 +101,5 @@ def deserialize(serialized_pixel):
 
 
 def deserialize_from_list_of_strings(list_of_strings):
-    result = tuple(int(i) for i in list_of_strings if i is not '')
-    return Pixel(result)
+    result_deserialize = tuple(int(i) for i in list_of_strings if i is not '')
+    return Pixel(result_deserialize)

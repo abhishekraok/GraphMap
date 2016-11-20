@@ -313,7 +313,7 @@ class ImageTreeCacheTests(unittest.TestCase):
         image_cache.cache_burst()
         self.assertEqual(image_cache.count_files_in_disk(), 0)
         root_link = constants.RED_GALLERY_LINK
-        result = multi_tile_server.populate_cache(root_link=root_link, cache_limit=12)
+        multi_tile_server.populate_cache(root_link=root_link, cache_limit=12)
         self.assertEqual(image_cache.count_files_in_disk(), cache_size)
         image_cache.cache_burst()
 
