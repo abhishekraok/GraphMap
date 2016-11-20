@@ -35,6 +35,10 @@ If you want to install the latest directly from github you can use
 - Follow up with other notebooks in the [notebook section](./notebook/)
 - Check the unit tests [Tests](./tests/)
 
+## Contributing
+Contributions are welcome. 
+Please have unit tests.
+
 ### Inspiration
 - [Deep Zoom Images](https://msdn.microsoft.com/en-us/library/cc645077%28v=vs.95%29.aspx?f=255&MSPPError=-2147217396) for viewing the images
 - Inspired by my [blog article](http://blog.abhishekrao.org/2013/11/multi-level-attack.html)
