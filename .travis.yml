@@ -4,6 +4,6 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # command to run tests
-script: tests/run_all_tests.sh
+script: nosetests --exe --with-coverage --cover-package=graphmap
 sudo: required
     
