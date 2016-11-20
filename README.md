@@ -36,8 +36,10 @@ If you want to install the latest directly from github you can use
 
 
 ### Getting Started Notebook
-Follow the ipython notebook [Getting Started Notebook]
+Start with ipython notebook [Getting Started Notebook]
 (./notebook/Example_Getting_Started.ipynb)
+
+Follow up with other notebooks in the [notebook section](./notebook/)
 
 #### Related
 - [Deep zoom links (Quora)](https://www.quora.com/What-is-Seadragon-used-for-and-how-does-it-work-in-really-simple-laymen-terms) What is OpenSeadragon
