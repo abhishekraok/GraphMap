@@ -2,22 +2,19 @@ import copy
 import os
 import time
 import unittest
+
 import numpy as np
 from PIL import Image
 
-from .context import graphmap
-
 from graphmap import alpha_conversion
+from graphmap import azure_image_tree
 from graphmap import constants
 from graphmap import imagetree
-from graphmap import azure_image_tree
-from graphmap import utilities
 from graphmap import imagevalue
 from graphmap import serializer
 from graphmap import standard_nodes
 from graphmap import standard_pixel
 from graphmap import tile_disk_cache
-from graphmap import tileserver
 from graphmap import tree_creator
 from graphmap import tree_operator
 from graphmap import treegenerator
@@ -209,8 +206,8 @@ class TestImageTree(unittest.TestCase):
         pic_file = '../data/beach.jpg'
         tree_filename = pic_file[:-4] + '.tsv.gz'
         self.assertTrue(os.path.isfile(pic_file), msg='Need any png file named ../data/beach.jpg file to run this test')
-        tree =utilities.from_imagefile(imagefilename=pic_file, name='test_save_compress',
-                                                       tree_filename=tree_filename)
+        tree = utilities.from_imagefile(imagefilename=pic_file, name='test_save_compress',
+                                        tree_filename=tree_filename)
         serializer.compress_and_save(tree)
         self.assertTrue(os.path.isfile(tree_filename))
         os.remove(tree_filename)
@@ -303,19 +300,6 @@ class ImageTreeCacheTests(unittest.TestCase):
         image_cache.cache_burst()
         self.assertEqual(image_cache.count_files_in_disk(), 0)
         self.assertEqual(image_cache.cache_count, 0)
-
-    # Requires internet
-    def test_image_cache_populator(self):
-        cache_dir = 'ticp'
-        cache_size = 12
-        image_cache = tile_disk_cache.TileCache(cache_dir=cache_dir, size=cache_size)
-        multi_tile_server = tileserver.MultiRootTileServer(image_cache=image_cache)
-        image_cache.cache_burst()
-        self.assertEqual(image_cache.count_files_in_disk(), 0)
-        root_link = constants.RED_GALLERY_LINK
-        multi_tile_server.populate_cache(root_link=root_link, cache_limit=12)
-        self.assertEqual(image_cache.count_files_in_disk(), cache_size)
-        image_cache.cache_burst()
 
 
 class ProtobufSerializationTest(unittest.TestCase):

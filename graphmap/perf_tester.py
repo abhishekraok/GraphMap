@@ -109,36 +109,32 @@ class PerfTester:
             time.sleep(0.1)
         return stats
 
-    def test_multiple_tiles(self, tile_list_to_hit):
+    def perf_test_multiple_tiles(self, tile_list_to_hit):
         all_stats = []
         for tile in tile_list_to_hit:
             all_stats.extend(self.repeat_measure_xyz(*tile))
         return all_stats
 
-    def test_random_tiles(self, count, max_lod):
+    def perf_test_random_tiles(self, count, max_lod):
         print('Testing random tiles for {} count, with end point {} and node link {}'
               .format(count, self.end_point, self.node_link))
         tiles_to_hit = generate_multiple_random_tiles(count, max_lod)
-        all_stats = self.test_multiple_tiles(tiles_to_hit)
+        all_stats = self.perf_test_multiple_tiles(tiles_to_hit)
         return AverageTimeStats(all_stats, self.end_point)
 
 
-def test_local(count=100):
+def perf_test_local(count=100):
     print('localhost')
     local_performance_tester = PerfTester(verbose=True)
-    avg_local = local_performance_tester.test_random_tiles(count, 20)
+    avg_local = local_performance_tester.perf_test_random_tiles(count, 20)
     print(avg_local)
     avg_local.append_to_file()
 
 
-def test_kaii(count=100):
+def perf_test_kaii(count=100):
     print('kaiimap')
     kaiimap_performance_tester = PerfTester(endpoint='http://kaiimap.org', verbose=True,
                                             node_link='start@https://artmapstore.blob.core.windows.net/firstnodes/user/abhishek/start.ver_10.tsv')
-    avg_kaii = kaiimap_performance_tester.test_random_tiles(count, max_lod=20)
+    avg_kaii = kaiimap_performance_tester.perf_test_random_tiles(count, max_lod=20)
     print (avg_kaii)
     avg_kaii.append_to_file()
-
-
-if __name__ == '__main__':
-    test_kaii(100)
