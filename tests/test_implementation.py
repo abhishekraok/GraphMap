@@ -268,6 +268,7 @@ class TestImageTree(unittest.TestCase):
         operated_tree = tree_operator.apply_operators(sample_tree, operation_list)
         self.assertEqual(operated_tree, sample_tree)
 
+    @unittest.skip('Not using cache now')
     def test_image_tree_args_to_path(self):
         sample_tree = TestImageTree.create_one_high_tree()
         cache_dir = 'test_args_cache_imagtree'
@@ -280,6 +281,7 @@ class TestImageTree(unittest.TestCase):
 
 
 class ImageTreeCacheTests(unittest.TestCase):
+    @unittest.skip('Not using cache now')
     def test_imagetree_with_cache_saves_file(self):
         test_tree = TestImageTree.create_one_high_tree()
         cache_dir_relative_path = 'tiwc'
