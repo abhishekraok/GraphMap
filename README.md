@@ -1,7 +1,9 @@
 # GraphMap
 *Organizing the images of the world*
 
-GraphMap is a way to organize image in a spatial 2D layout.
+[![Build Status](https://travis-ci.org/abhishekraok/GraphMap.svg?branch=master)](https://travis-ci.org/abhishekraok/GraphMap)
+
+a way to organize image in a spatial 2D layout.
 It is a directed cyclic graph where every node has either 0 or 4 edges. 
 Each node may or may not have an image on them. 
 One can imagine this as a quad tree (although cycles are possible), and you are looking from the bottom. 
@@ -28,7 +30,7 @@ If you want to install the latest directly from github you can use
 
 `pip install git+https://github.com/abhishekraok/GraphMap`
 
-[![Build Status](https://travis-ci.org/abhishekraok/GraphMap.svg?branch=master)](https://travis-ci.org/abhishekraok/GraphMap)
+
 
 ## Getting Started
 - Start with ipython notebook [Getting Started Notebook](./notebook/Example_Getting_Started.ipynb)
