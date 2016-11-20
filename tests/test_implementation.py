@@ -273,14 +273,18 @@ class TestImageTree(unittest.TestCase):
         cache_dir = 'test_args_cache_imagtree'
         cacher = tile_disk_cache.TileCache(cache_dir, size=10)
         save_path = cacher.image_tree_args_to_path(sample_tree, resolution=512)
-        self.assertTrue(save_path.startswith(
-            os.path.join(cache_dir, '512', tile_disk_cache.to_valid_filename(sample_tree.filename), sample_tree.name)))
+        self.assertTrue(save_path.startswith(os.path.join(cache_dir, '512',
+                                                          tile_disk_cache.to_valid_filename(sample_tree.filename),
+                                                          sample_tree.name)), save_path)
+        os.removedirs(cache_dir)
 
 
 class ImageTreeCacheTests(unittest.TestCase):
     def test_imagetree_with_cache_saves_file(self):
         test_tree = TestImageTree.create_one_high_tree()
-        cache_dir = 'tiwc'
+        cache_dir_relative_path = 'tiwc'
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        cache_dir = os.path.join(current_dir, cache_dir_relative_path)
         cache_size = 8
         resolution = 64
         image_cache = tile_disk_cache.TileCache(cache_dir=cache_dir, size=cache_size)
@@ -412,7 +416,9 @@ class ImageTests(unittest.TestCase):
         self.assertLess(utilities.mse(rendered_array, expected_array), 0.1)
 
     def test_fruits(self):
-        fruit_filename = 'fruits.tsv'
+        fruit_relative_filename = 'fruits.tsv'
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        fruit_filename = os.path.join(current_dir, fruit_relative_filename)
         self.assertTrue(os.path.isfile(fruit_filename))
         link = utilities.format_node_address(node_name='fruits', filename=fruit_filename)
         fruit_tree = serializer.load_link_new_serializer(link=link)

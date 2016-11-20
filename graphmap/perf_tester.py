@@ -123,7 +123,7 @@ class PerfTester:
         return AverageTimeStats(all_stats, self.end_point)
 
 
-def perf_test_local(count=100):
+def perf_local(count=100):
     print('localhost')
     local_performance_tester = PerfTester(verbose=True)
     avg_local = local_performance_tester.perf_test_random_tiles(count, 20)
@@ -131,7 +131,7 @@ def perf_test_local(count=100):
     avg_local.append_to_file()
 
 
-def perf_test_kaii(count=100):
+def perf_kaii(count=100):
     print('kaiimap')
     kaiimap_performance_tester = PerfTester(endpoint='http://kaiimap.org', verbose=True,
                                             node_link='start@https://artmapstore.blob.core.windows.net/firstnodes/user/abhishek/start.ver_10.tsv')
