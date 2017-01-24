@@ -46,3 +46,11 @@ def upload_to_blob_name(file_to_store, blob_name):
     block_blob_service.create_blob_from_path(container_name=first_container,
                                              blob_name=blob_name, file_path=file_to_store)
     print('Saved to azure the file ', file_to_store, '. Remote path = ', blob_name)
+
+if __name__ == '__main__':
+    import requests
+    data = {'Authorization':'SharedKey artmapstore:',
+            'x-ms-date':'Fri, 26 Jun 2015 23:39:12 GMT'}
+    url = 'https://artmapstore.blob.core.windows.net/?comp=list'
+    r = requests.get(url, data=data)
+    print(r.status_code, r.text)
