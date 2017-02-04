@@ -2,22 +2,19 @@ import copy
 import os
 import time
 import unittest
+
 import numpy as np
 from PIL import Image
 
-from .context import graphmap
-
 from graphmap import alpha_conversion
+from graphmap import azure_image_tree
 from graphmap import constants
 from graphmap import imagetree
-from graphmap import azure_image_tree
-from graphmap import utilities
 from graphmap import imagevalue
 from graphmap import serializer
 from graphmap import standard_nodes
 from graphmap import standard_pixel
 from graphmap import tile_disk_cache
-from graphmap import tileserver
 from graphmap import tree_creator
 from graphmap import tree_operator
 from graphmap import treegenerator
@@ -209,8 +206,8 @@ class TestImageTree(unittest.TestCase):
         pic_file = '../data/beach.jpg'
         tree_filename = pic_file[:-4] + '.tsv.gz'
         self.assertTrue(os.path.isfile(pic_file), msg='Need any png file named ../data/beach.jpg file to run this test')
-        tree =utilities.from_imagefile(imagefilename=pic_file, name='test_save_compress',
-                                                       tree_filename=tree_filename)
+        tree = utilities.from_imagefile(imagefilename=pic_file, name='test_save_compress',
+                                        tree_filename=tree_filename)
         serializer.compress_and_save(tree)
         self.assertTrue(os.path.isfile(tree_filename))
         os.remove(tree_filename)
@@ -271,19 +268,25 @@ class TestImageTree(unittest.TestCase):
         operated_tree = tree_operator.apply_operators(sample_tree, operation_list)
         self.assertEqual(operated_tree, sample_tree)
 
+    @unittest.skip('Not using cache now')
     def test_image_tree_args_to_path(self):
         sample_tree = TestImageTree.create_one_high_tree()
         cache_dir = 'test_args_cache_imagtree'
         cacher = tile_disk_cache.TileCache(cache_dir, size=10)
         save_path = cacher.image_tree_args_to_path(sample_tree, resolution=512)
-        self.assertTrue(save_path.startswith(
-            os.path.join(cache_dir, '512', tile_disk_cache.to_valid_filename(sample_tree.filename), sample_tree.name)))
+        self.assertTrue(save_path.startswith(os.path.join(cache_dir, '512',
+                                                          tile_disk_cache.to_valid_filename(sample_tree.filename),
+                                                          sample_tree.name)), save_path)
+        os.removedirs(cache_dir)
 
 
 class ImageTreeCacheTests(unittest.TestCase):
+    @unittest.skip('Not using cache now')
     def test_imagetree_with_cache_saves_file(self):
         test_tree = TestImageTree.create_one_high_tree()
-        cache_dir = 'tiwc'
+        cache_dir_relative_path = 'tiwc'
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        cache_dir = os.path.join(current_dir, cache_dir_relative_path)
         cache_size = 8
         resolution = 64
         image_cache = tile_disk_cache.TileCache(cache_dir=cache_dir, size=cache_size)
@@ -303,19 +306,6 @@ class ImageTreeCacheTests(unittest.TestCase):
         image_cache.cache_burst()
         self.assertEqual(image_cache.count_files_in_disk(), 0)
         self.assertEqual(image_cache.cache_count, 0)
-
-    # Requires internet
-    def test_image_cache_populator(self):
-        cache_dir = 'ticp'
-        cache_size = 12
-        image_cache = tile_disk_cache.TileCache(cache_dir=cache_dir, size=cache_size)
-        multi_tile_server = tileserver.MultiRootTileServer(image_cache=image_cache)
-        image_cache.cache_burst()
-        self.assertEqual(image_cache.count_files_in_disk(), 0)
-        root_link = constants.RED_GALLERY_LINK
-        result = multi_tile_server.populate_cache(root_link=root_link, cache_limit=12)
-        self.assertEqual(image_cache.count_files_in_disk(), cache_size)
-        image_cache.cache_burst()
 
 
 class ProtobufSerializationTest(unittest.TestCase):
@@ -428,7 +418,9 @@ class ImageTests(unittest.TestCase):
         self.assertLess(utilities.mse(rendered_array, expected_array), 0.1)
 
     def test_fruits(self):
-        fruit_filename = 'fruits.tsv'
+        fruit_relative_filename = 'fruits.tsv'
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        fruit_filename = os.path.join(current_dir, fruit_relative_filename)
         self.assertTrue(os.path.isfile(fruit_filename))
         link = utilities.format_node_address(node_name='fruits', filename=fruit_filename)
         fruit_tree = serializer.load_link_new_serializer(link=link)

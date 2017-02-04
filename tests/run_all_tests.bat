@@ -1,0 +1,2 @@
+nosetests test_graph_map.py
+nosetests test_implementation.py

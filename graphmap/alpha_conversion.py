@@ -35,21 +35,21 @@ def alpha_composite(front, back):
     """
     front = np.asarray(front)
     back = np.asarray(back)
-    result = np.empty(front.shape, dtype='float')
+    alpha_result = np.empty(front.shape, dtype='float')
     alpha = np.index_exp[:, :, 3:]
     rgb = np.index_exp[:, :, :3]
     falpha = front[alpha] / 255.0
     balpha = back[alpha] / 255.0
-    result[alpha] = falpha + balpha * (1 - falpha)
+    alpha_result[alpha] = falpha + balpha * (1 - falpha)
     old_setting = np.seterr(invalid='ignore')
-    result[rgb] = (front[rgb] * falpha + back[rgb] * balpha * (1 - falpha)) / result[alpha]
+    alpha_result[rgb] = (front[rgb] * falpha + back[rgb] * balpha * (1 - falpha)) / alpha_result[alpha]
     np.seterr(**old_setting)
-    result[alpha] *= 255
-    np.clip(result, 0, 255)
+    alpha_result[alpha] *= 255
+    np.clip(alpha_result, 0, 255)
     # astype('uint8') maps np.nan and np.inf to 0
-    result = result.astype('uint8')
-    result = Image.fromarray(result, 'RGBA')
-    return result
+    alpha_result = alpha_result.astype('uint8')
+    alpha_result = Image.fromarray(alpha_result, 'RGBA')
+    return alpha_result
 
 
 def alpha_composite_with_color(image, color=(255, 255, 255)):
@@ -83,8 +83,8 @@ def pure_pil_alpha_to_color_v1(image, color=(255, 255, 255)):
         return (front * a + back * (255 - a)) / 255
 
     def blend_rgba(back, front):
-        result = [blend_value(back[i], front[i], front[3]) for i in (0, 1, 2)]
-        return tuple(result + [255])
+        alpha_result = [blend_value(back[i], front[i], front[3]) for i in (0, 1, 2)]
+        return tuple(alpha_result + [255])
 
     im = image.copy()  # don't edit the reference directly
     p = im.load()  # load pixel array

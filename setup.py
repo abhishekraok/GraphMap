@@ -11,7 +11,6 @@ setup(
     author_email='abhishek.rao.comm@gmail.com',
     url='https://github.com/abhishekraok/GraphMap',
     download_url='https://github.com/abhishekraok/GraphMap/archive/v0.1.tar.gz',
-    license=license,
     packages=find_packages(exclude=('tests', 'docs'))
 )
 

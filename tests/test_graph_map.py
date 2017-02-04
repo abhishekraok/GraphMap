@@ -6,7 +6,7 @@ from graphmap import graphmap_main
 from graphmap import imagetree
 from graphmap import imagevalue
 from graphmap import memory_persistence
-from graphmap import result_file
+from graphmap import result
 from graphmap import serializer
 from graphmap import utilities
 from graphmap.constants import seattle_skyline_url
@@ -23,7 +23,7 @@ class CreateNodeTests(unittest.TestCase):
         node_name = NodeLink('tvjl', None)
         self.assertFalse(gm.node_exists(node_name))
         create_result = gm.create_node(root_node_link=node_name, image_value_link=wiki_image_url)
-        self.assertEqual(create_result.code, result_file.SUCCESS_CODE)
+        self.assertEqual(create_result.code, result.SUCCESS_CODE)
         self.assertTrue(gm.node_exists(node_name))
         self.assertEqual(create_result.value, node_name)
 
@@ -35,28 +35,28 @@ class CreateNodeTests(unittest.TestCase):
         gm.create_node(root_node_link=second_node_name, image_value_link=wiki_image_url)
         first_image_result = gm.get_image_at_quad_key(first_node_name, resolution=256, quad_key='')
         second_image_result = gm.get_image_at_quad_key(second_node_name, resolution=256, quad_key='')
-        self.assertEqual(first_image_result.code, result_file.SUCCESS_CODE)
-        self.assertEqual(second_image_result.code, result_file.SUCCESS_CODE)
+        self.assertEqual(first_image_result.code, result.SUCCESS_CODE)
+        self.assertEqual(second_image_result.code, result.SUCCESS_CODE)
         self.assertTrue(utilities.pil_images_equal(first_image_result.value, second_image_result.value))
 
     def test_invalid_already_exists(self):
         gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         first_node_name = NodeLink('tiae')
         create_result = gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
-        self.assertEqual(create_result.code, result_file.SUCCESS_CODE)
+        self.assertEqual(create_result.code, result.SUCCESS_CODE)
         repeat_create_result = gm.create_node(root_node_link=first_node_name, image_value_link=wiki_image_url)
-        self.assertNotEqual(repeat_create_result.code, result_file.SUCCESS_CODE)
-        self.assertEqual(repeat_create_result.code, result_file.NAME_ALREADY_EXISTS)
+        self.assertNotEqual(repeat_create_result.code, result.SUCCESS_CODE)
+        self.assertEqual(repeat_create_result.code, result.NAME_ALREADY_EXISTS)
 
     def test_invalid_wrong_children_count(self):
         gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
         children_names = ('a', 'b', 'c', 'd')
         good_result = gm.create_node(root_node_link=NodeLink('tiwccg'), children_links=children_names)
-        self.assertEqual(good_result.code, result_file.SUCCESS_CODE)
+        self.assertEqual(good_result.code, result.SUCCESS_CODE)
         wrong_children_names = ('e', 'f', 'g')
         bad_result = gm.create_node(root_node_link=NodeLink('tiwccb'), children_links=wrong_children_names)
-        self.assertNotEqual(bad_result.code, result_file.SUCCESS_CODE)
-        self.assertEqual(bad_result.code, result_file.WRONG_CHILDREN_COUNT)
+        self.assertNotEqual(bad_result.code, result.SUCCESS_CODE)
+        self.assertEqual(bad_result.code, result.WRONG_CHILDREN_COUNT)
 
 
 class ConnectChildTests(unittest.TestCase):
@@ -129,7 +129,7 @@ class ConnectChildTests(unittest.TestCase):
         new_root_result = gm.connect_child(root_node_link=first_node_name, quad_key=quad_key,
                                            child_node_link=NodeLink('dalja'))
         self.assertFalse(new_root_result.is_success())
-        self.assertEqual(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, new_root_result.code)
+        self.assertEqual(result.NODE_LINK_NOT_FOUND_ERROR_CODE, new_root_result.code)
 
     def test_invalid_add_non_existent_root_name(self):
         gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
@@ -141,7 +141,7 @@ class ConnectChildTests(unittest.TestCase):
         new_root_result = gm.connect_child(root_node_link=NodeLink('galall'), quad_key=quad_key,
                                            child_node_link=second_node_name)
         self.assertFalse(new_root_result.is_success())
-        self.assertEqual(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, new_root_result.code)
+        self.assertEqual(result.NODE_LINK_NOT_FOUND_ERROR_CODE, new_root_result.code)
 
 
 class NodeExistsTest(unittest.TestCase):
@@ -183,7 +183,7 @@ class GetChildName(unittest.TestCase):
         self.assertTrue(add_result.is_success())
         child_name_result = gm.get_child_name(root_node_link=first_node_name, quad_key='111')
         self.assertFalse(child_name_result.is_success())
-        self.assertEqual(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, child_name_result.code)
+        self.assertEqual(result.NODE_LINK_NOT_FOUND_ERROR_CODE, child_name_result.code)
 
     def test_invalid_root_does_not_exists(self):
         gm = graphmap_main.GraphMap(memory_persistence.MemoryPersistence())
@@ -197,7 +197,7 @@ class GetChildName(unittest.TestCase):
         self.assertTrue(add_result.is_success())
         child_name_result = gm.get_child_name(root_node_link=NodeLink('invalid'), quad_key=quad_key)
         self.assertFalse(child_name_result.is_success())
-        self.assertEqual(result_file.NODE_LINK_NOT_FOUND_ERROR_CODE, child_name_result.code)
+        self.assertEqual(result.NODE_LINK_NOT_FOUND_ERROR_CODE, child_name_result.code)
 
 
 class GetImageAtQuadKey(unittest.TestCase):

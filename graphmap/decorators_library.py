@@ -53,14 +53,14 @@ class asynchronous(object):
         def is_done(self):
             return not self.thread.is_alive()
 
-        def get_result(self):
+        def get_deco_result(self):
             if not self.is_done():
                 raise asynchronous.NotYetDoneException('the call has not yet completed its task')
 
-            if not hasattr(self, 'result'):
-                self.result = self.queue.get()
+            if not hasattr(self, 'deco_result'):
+                self.deco_result = self.queue.get()
 
-            return self.result
+            return self.deco_result
 
 
 if __name__ == '__main__':
@@ -74,19 +74,19 @@ if __name__ == '__main__':
         return num * num
 
 
-    result = long_process.start(12)
+    deco_result = long_process.start(12)
 
     for i in range(20):
         print i
         time.sleep(1)
 
-        if result.is_done():
-            print "result {0}".format(result.get_result())
+        if deco_result.is_done():
+            print "deco_result {0}".format(deco_result.get_deco_result())
 
-    result2 = long_process.start(13)
+    deco_result2 = long_process.start(13)
 
     try:
-        print "result2 {0}".format(result2.get_result())
+        print "deco_result2 {0}".format(deco_result2.get_deco_result())
 
     except asynchronous.NotYetDoneException as ex:
         print ex.message
@@ -120,29 +120,29 @@ with logging.INFO level.
         def wrapper(*args, **kwds):
             self.logger.info(
                 self.ENTRY_MESSAGE.format(func.__name__))  # logging level .info(). Set to .debug() if you want to
-            f_result = func(*args, **kwds)
+            f_deco_result = func(*args, **kwds)
             self.logger.info(
                 self.EXIT_MESSAGE.format(func.__name__))  # logging level .info(). Set to .debug() if you want to
-            return f_result
+            return f_deco_result
 
         return wrapper
 
 
 def lazy_thunkify(f):
     """Make a function immediately return a function of no args which, when called,
-    waits for the result, which will start being processed in another thread."""
+    waits for the deco_result, which will start being processed in another thread."""
 
     @functools.wraps(f)
     def lazy_thunked(*args, **kwargs):
         wait_event = threading.Event()
 
-        result = [None]
+        deco_result = [None]
         exc = [False, None]
 
         def worker_func():
             try:
-                func_result = f(*args, **kwargs)
-                result[0] = func_result
+                func_deco_result = f(*args, **kwargs)
+                deco_result[0] = func_deco_result
             except Exception, e:
                 exc[0] = True
                 exc[1] = sys.exc_info()
@@ -156,7 +156,7 @@ def lazy_thunkify(f):
             if exc[0]:
                 raise exc[1][0], exc[1][1], exc[1][2]
 
-            return result[0]
+            return deco_result[0]
 
         threading.Thread(target=worker_func).start()
 
