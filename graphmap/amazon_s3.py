@@ -15,7 +15,7 @@ secret_key = key_file_content[1].strip().split('=')[-1]
 def upload_file(filename, remote_filename):
     conn = tinys3.Connection(access_key_id, secret_key, tls=True)
     if remote_filename.startswith(constants.amazon_s3_base_filename):
-        final_remote_filename = constants.amazon_s3_folder + '/'  + remote_filename[len(constants.amazon_s3_base_filename):]
+        final_remote_filename = constants.amazon_s3_folder + remote_filename[len(constants.amazon_s3_base_filename):]
     else:
         final_remote_filename = remote_filename
     with open(filename, 'rb') as f:
