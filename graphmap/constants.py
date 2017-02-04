@@ -16,6 +16,7 @@ version_string = 'ver_'
 welcome_link = 'welcome@https://artmapstore.blob.core.windows.net/firstnodes/welcome_kaii.ver_0.tsv'
 WELCOME_IMAGE = 'https://artmapstore.blob.core.windows.net/firstnodes/photos/welcome_to_kaii.JPG'
 azure_base_filename = 'https://artmapstore.blob.core.windows.net/firstnodes'
+amazon_s3_base_filename = 'https://s3-us-west-2.amazonaws.com/graphnodes/first'
 separator_character = '@'
 children_per_node = 4
 anonymous_username = 'anonymous'

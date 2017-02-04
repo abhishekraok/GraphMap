@@ -1,5 +1,6 @@
 import os
 import tinys3
+import constants
 
 bucket_name = 'graphnodes'
 key_filename = 'rootkey.csv'
@@ -14,8 +15,12 @@ secret_key = key_file_content[1].strip().split('=')[-1]
 
 def upload_file(filename, remote_filename):
     conn = tinys3.Connection(access_key_id, secret_key, tls=True)
+    if remote_filename.startswith(constants.amazon_s3_base_filename):
+        final_remote_filename = remote_filename[len(constants.amazon_s3_base_filename):]
+    else:
+        final_remote_filename = remote_filename
     with open(filename, 'rb') as f:
-        conn.upload(remote_filename, f, bucket_name)
+        conn.upload(final_remote_filename, f, bucket_name)
 
 
 if __name__ == '__main__':
