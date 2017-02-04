@@ -5,3 +5,4 @@ enum
 numpy
 pillow
 protobuf
+boto
