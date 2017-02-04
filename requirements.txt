@@ -5,4 +5,4 @@ enum
 numpy
 pillow
 protobuf
-boto
+tinys3
