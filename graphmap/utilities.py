@@ -208,8 +208,8 @@ def put_contents(content, filename):
     with file_opener(write_filename, write_mode) as f:
         f.writelines(content)
     if is_web_link(filename):
-        import azure_image_tree
-        azure_image_tree.upload_to_url(file_to_store=write_filename, url=filename)
+        import amazon_s3
+        amazon_s3.upload_file(write_filename, remote_filename=filename)
         os.remove(write_filename)
     else:
         print('Saved as ', filename)

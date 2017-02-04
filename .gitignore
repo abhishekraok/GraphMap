@@ -118,7 +118,7 @@ obj/
 # Private keys
 keys.txt
 *.db
+rootkey.csv
 
 # cache
 cache/
-
