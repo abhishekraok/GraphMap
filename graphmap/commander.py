@@ -6,7 +6,7 @@ import time
 
 import azure_image_tree
 import imagetree
-import imagetree_core.tree_viewer
+import tree_viewer
 import matplotlib.pyplot as plt
 import serializer
 import utilities
@@ -50,7 +50,7 @@ def process_args(parser):
             parser.print_help()
             exit()
         tree = serializer.load_link_new_serializer(arguments.nodelink)
-        imagetree_core.tree_viewer.tree_viewer(tree)
+        tree_viewer.tree_viewer(tree)
         exit()
 
     if arguments.upload_file:
