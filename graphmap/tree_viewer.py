@@ -1,7 +1,7 @@
 import imagetree
-import imagetree_core.constants
-from imagetree_core import serializer
-from imagetree_core.utilities import quadkey_to_xyz, xyz_to_quadkey, create_tree_from_url, is_valid_quadkey
+import serializer
+from utilities import quadkey_to_xyz, xyz_to_quadkey, is_valid_quadkey
+from serializer import create_tree_from_jpg_url
 import commander
 import constants
 import sys
@@ -67,7 +67,7 @@ def tree_viewer(tree):
             blob_url = 'https://artmapstore.blob.core.windows.net/firstnodes/' + node_name + '.tsv.gz'
             quad_key = current_quadkey
             print('Inserting image ', url, ' at quadkey ', quad_key)
-            another_tree = create_tree_from_url(url=url, node_name=tree.name, tree_filename=blob_url,
+            another_tree = create_tree_from_jpg_url(url=url, name=tree.name, filename=blob_url,
                                                 max_resolution=1024)
             tree.insert(another_tree, quad_key)
         print(
@@ -84,6 +84,6 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         node_link = sys.argv[1]
     else:
-        node_link = imagetree_core.constants.ROOT_LINK
+        node_link = constants.ROOT_LINK
     tree = serializer.load_link_new_serializer(node_link)
     tree_viewer(tree)
