@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='graphmap',
-    version='0.0.5',
+    version='0.0.6',
     description='Images on a quad graph. Create an infinite canvas',
     author='Abhishek Rao',
     author_email='abhishek.rao.comm@gmail.com',
