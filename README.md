@@ -33,7 +33,7 @@ If you want to install the latest directly from github you can use
 
 
 ## Getting Started
-- Start with ipython notebook [Getting Started Notebook](./notebook/Example_Getting_Started.ipynb)
+- Start with ipython notebook [Getting Started Notebook](./notebook/Getting_Started.ipynb)
 - Follow up with other notebooks in the [notebook section](./notebook/)
 - Check the unit tests [Tests](./tests/)
 
