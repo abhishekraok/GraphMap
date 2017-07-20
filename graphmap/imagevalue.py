@@ -18,6 +18,49 @@ def fetch_image_from_url(url):
         return pil_image
     return Image.new("RGB", size=(256, 266), color='black')
 
+def convert_url_to_image(url):
+  if utilities.url_exists(url):
+    return None
+  
+  return Image.new("RGB", size=(256, 266), color='black')
+
+import sys
+import time
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4.QtWebKit import *
+
+class Screenshot(QWebView):
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        QWebView.__init__(self)
+        self._loaded = False
+        self.loadFinished.connect(self._loadFinished)
+
+    def capture(self, url, output_file):
+        self.load(QUrl(url))
+        self.wait_load()
+        # set to webpage size
+        frame = self.page().mainFrame()
+        self.page().setViewportSize(frame.contentsSize())
+        # render image
+        image = QImage(self.page().viewportSize(), QImage.Format_ARGB32)
+        painter = QPainter(image)
+        frame.render(painter)
+        painter.end()
+        print 'saving', output_file
+        image.save(output_file)
+
+    def wait_load(self, delay=0):
+        # process app events until page loaded
+        while not self._loaded:
+            self.app.processEvents()
+            time.sleep(delay)
+        self._loaded = False
+
+    def _loadFinished(self, result):
+        self._loaded = True
+
 
 class ImageValue:
     """
@@ -50,6 +93,7 @@ pil_image_cache = pylru.lrucache(image_cache_size)
 proper_shape_image_cache = pylru.lrucache(image_cache_size)
 
 
+
 class JpgWebImage(ImageValue):
     """
     A lazily fetched web image.
@@ -75,7 +119,7 @@ class JpgWebImage(ImageValue):
     @property
     def pil_image(self):
         if self._pil_image is None:
-            self._pil_image = fetch_image_from_url(self.url)
+            self._pil_image = convert_url_to_image(self.url)
             pil_image_cache[self.url] = self._pil_image
         return self._pil_image
 
@@ -121,3 +165,76 @@ class JpgWebImage(ImageValue):
 
     def __repr__(self):
         return 'JpegWebImage({})'.format(self.url)
+
+
+class UrlWebImage(ImageValue):
+  """
+  A lazily fetched web screenshot.
+  """
+
+  def __init__(self, url):
+    """
+    Given url is stored. When asked to render it fetches the image of webpage.
+
+    :type _pil_image: Image.Image
+    """
+    self.url = url
+    if url in pil_image_cache:
+      self._pil_image = pil_image_cache[url]
+    else:
+      self._pil_image = None
+    if url in proper_shape_image_cache:
+      self._proper_shape_image = proper_shape_image_cache[url]
+    else:
+      self._proper_shape_image = None
+    self.cache = pylru.lrucache(10)
+
+  @property
+  def pil_image(self):
+    if self._pil_image is None:
+      self._pil_image = fetch_image_from_url(self.url)
+      pil_image_cache[self.url] = self._pil_image
+    return self._pil_image
+
+  def get_pil_image_at_full_resolution(self):
+    return self.pil_image
+
+  def get_pil_image_at_full_resolution_proper_shape(self):
+    if self._proper_shape_image is None:
+      self._proper_shape_image = utilities.reshape_proper_pil_image(self.get_pil_image_at_full_resolution())
+      proper_shape_image_cache[self.url] = self._proper_shape_image
+    return self._proper_shape_image
+
+  def get_pil_image(self, resolution):
+    """
+    Returns a pil Image at requested resolution.
+
+    :rtype:  Image.Image
+    """
+    return self.pil_image.resize((resolution, resolution))
+
+  def get_np_array(self, resolution):
+    """Convert to numpy array.
+
+    Drop alpha"""
+    cache_key = str(resolution)
+    if cache_key in self.cache:
+      return self.cache[cache_key]
+    pil_image = self.get_pil_image_at_full_resolution()
+    im_array = np.array(pil_image, dtype=np.uint8)
+    square_image = utilities.reshape_proper(im_array)
+    return_value = np.array(Image.fromarray(square_image).resize((resolution, resolution)), dtype=np.uint8)
+    self.cache[cache_key] = return_value
+    return return_value
+
+  def is_set(self):
+    return True
+
+  def __eq__(self, other):
+    return self.url == other.url
+
+  def __ne__(self, other):
+    return not self == other
+
+  def __repr__(self):
+    return 'JpegWebImage({})'.format(self.url)
